@@ -1,0 +1,16 @@
+{
+  "name": "benchmark-workspace",
+  "private": true,
+  "workspaces": [
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently -k -n backend,frontend -c green,blue \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && python scripts/dev_server.py",
+    "dev:frontend": "npm run dev --workspace frontend",
+    "build:frontend": "npm run build --workspace frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
