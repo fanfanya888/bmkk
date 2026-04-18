@@ -7,6 +7,7 @@ import type {
   EvaluationBatchJobCreateRequest,
   EvaluationBatchJobResponse,
   EvaluationBatchJobSummaryResponse,
+  EvaluationLeaderboardResponse,
   EvaluationResultClearRequest,
   EvaluationResultListResponse,
   EvaluationResultOverrideRequest,
@@ -74,6 +75,9 @@ export const api = {
   },
   getEvaluationStats() {
     return request<EvaluationStatsResponse>("/overview/evaluations");
+  },
+  getEvaluationLeaderboard() {
+    return request<EvaluationLeaderboardResponse>("/overview/evaluation-leaderboard");
   },
   listModels() {
     return request<EvalModelRead[]>("/models");
@@ -183,14 +187,22 @@ export const api = {
       body: JSON.stringify(payload),
     });
   },
-  getImageUrl(path: string) {
+  getImageUrl(path: string, version?: string | number | null) {
     const normalizedPath = path.replace(/\\/g, "/");
-    if (/^(https?:|data:)/.test(normalizedPath) || normalizedPath.startsWith("/")) {
-      return normalizedPath;
+    const baseUrl =
+      /^(https?:|data:)/.test(normalizedPath) || normalizedPath.startsWith("/")
+        ? normalizedPath
+        : `${API_BASE_URL}/assets/images/${encodePathSegments(
+            normalizedPath.startsWith("images/")
+              ? normalizedPath.slice("images/".length)
+              : normalizedPath,
+          )}`;
+
+    if (version === undefined || version === null || /^data:/.test(baseUrl)) {
+      return baseUrl;
     }
-    const imageRelativePath = normalizedPath.startsWith("images/")
-      ? normalizedPath.slice("images/".length)
-      : normalizedPath;
-    return `${API_BASE_URL}/assets/images/${encodePathSegments(imageRelativePath)}`;
+
+    const separator = baseUrl.includes("?") ? "&" : "?";
+    return `${baseUrl}${separator}v=${encodeURIComponent(String(version))}`;
   },
 };

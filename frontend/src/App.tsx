@@ -6,7 +6,9 @@ import { NavLink, Route, Routes, useLocation, useNavigate } from "react-router-d
 const { Header, Sider, Content } = Layout;
 const { useBreakpoint } = Grid;
 
-const OverviewPage = lazy(async () => ({ default: (await import("./pages/OverviewPage")).OverviewPage }));
+const OverviewPage = lazy(async () => ({
+  default: (await import("./pages/ResultsOverviewPage")).ResultsOverviewPage,
+}));
 const ModelsPage = lazy(async () => ({ default: (await import("./pages/ModelsPage")).ModelsPage }));
 const EvaluationsPage = lazy(async () => ({
   default: (await import("./pages/EvaluationsPage")).EvaluationsPage,
@@ -45,9 +47,9 @@ const pageMetaMap: Record<
   }
 > = {
   "/": {
-    eyebrow: "Platform Overview",
-    title: "项目概览",
-    description: "集中查看服务链路、题库规模、模型池状态和评测完成情况。",
+    eyebrow: "Result Overview",
+    title: "概览",
+    description: "按模型汇总首轮与多轮累计命中，适合看当前整体榜单表现。",
   },
   "/models": {
     eyebrow: "Model Registry",

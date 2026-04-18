@@ -117,9 +117,11 @@ function getAttemptData(record: EvaluationResultRowResponse, attempt: number): E
 function MarkdownPreview({
   text,
   emptyText,
+  imageVersion,
 }: {
   text: string | null | undefined;
   emptyText: string;
+  imageVersion?: string;
 }) {
   if (!text) {
     return <Typography.Text type="secondary">{emptyText}</Typography.Text>;
@@ -134,7 +136,7 @@ function MarkdownPreview({
           img: ({ src, alt }) =>
             src ? (
               <Image
-                src={api.getImageUrl(src)}
+                src={api.getImageUrl(src, imageVersion)}
                 alt={alt ?? ""}
                 className="markdown-embedded-image"
               />
@@ -147,7 +149,7 @@ function MarkdownPreview({
   );
 }
 
-function PathPreviewList({ paths }: { paths: string[] }) {
+function PathPreviewList({ paths, imageVersion }: { paths: string[]; imageVersion?: string }) {
   if (!paths.length) {
     return <Typography.Text type="secondary">无</Typography.Text>;
   }
@@ -164,7 +166,7 @@ function PathPreviewList({ paths }: { paths: string[] }) {
           {paths.map((path) => (
             <Image
               key={path}
-              src={api.getImageUrl(path)}
+              src={api.getImageUrl(path, imageVersion)}
               alt={path}
               className="result-image"
             />
@@ -189,6 +191,7 @@ export function ResultsPage() {
   const [drawerAttempt, setDrawerAttempt] = useState<number>(1);
   const [isAdvancing, setIsAdvancing] = useState(false);
   const [overrideResultValue, setOverrideResultValue] = useState<0 | 1 | undefined>(undefined);
+  const [imageVersion] = useState(() => String(Date.now()));
 
   const fetchResults = (params: EvaluationResultQueryParams) => api.listEvaluationResults(params);
 
@@ -638,10 +641,14 @@ export function ResultsPage() {
 
             <Card className="panel-card">
               <Typography.Title level={5}>题目内容</Typography.Title>
-              <MarkdownPreview text={selectedRow.question.content_text} emptyText="无题面文本" />
+              <MarkdownPreview
+                text={selectedRow.question.content_text}
+                emptyText="无题面文本"
+                imageVersion={imageVersion}
+              />
               <Typography.Text strong>题面图片</Typography.Text>
               <div style={{ marginTop: 8 }}>
-                <PathPreviewList paths={selectedRow.question.content_image_paths} />
+                <PathPreviewList paths={selectedRow.question.content_image_paths} imageVersion={imageVersion} />
               </div>
             </Card>
 
@@ -712,7 +719,13 @@ export function ResultsPage() {
                           {
                             key: "response-rendered",
                             label: "渲染",
-                            children: <MarkdownPreview text={drawerAttemptData.response_text} emptyText="无模型回复" />,
+                            children: (
+                              <MarkdownPreview
+                                text={drawerAttemptData.response_text}
+                                emptyText="无模型回复"
+                                imageVersion={imageVersion}
+                              />
+                            ),
                           },
                           {
                             key: "response-raw",
@@ -735,7 +748,13 @@ export function ResultsPage() {
                           {
                             key: "judge-rendered",
                             label: "渲染",
-                            children: <MarkdownPreview text={drawerAttemptData.judge_feedback} emptyText="无 Judge 评价" />,
+                            children: (
+                              <MarkdownPreview
+                                text={drawerAttemptData.judge_feedback}
+                                emptyText="无 Judge 评价"
+                                imageVersion={imageVersion}
+                              />
+                            ),
                           },
                           {
                             key: "judge-raw",
@@ -767,20 +786,28 @@ export function ResultsPage() {
               <Col xs={24} xl={12}>
                 <Card className="panel-card">
                   <Typography.Title level={5}>标准答案</Typography.Title>
-                  <MarkdownPreview text={selectedRow.question.answer_text} emptyText="无标准答案文本" />
+                  <MarkdownPreview
+                    text={selectedRow.question.answer_text}
+                    emptyText="无标准答案文本"
+                    imageVersion={imageVersion}
+                  />
                   <Typography.Text strong>答案图片</Typography.Text>
                   <div style={{ marginTop: 8 }}>
-                    <PathPreviewList paths={selectedRow.question.answer_image_paths} />
+                    <PathPreviewList paths={selectedRow.question.answer_image_paths} imageVersion={imageVersion} />
                   </div>
                 </Card>
               </Col>
               <Col xs={24} xl={12}>
                 <Card className="panel-card">
                   <Typography.Title level={5}>解析信息</Typography.Title>
-                  <MarkdownPreview text={selectedRow.question.analysis_text} emptyText="无解析文本" />
+                  <MarkdownPreview
+                    text={selectedRow.question.analysis_text}
+                    emptyText="无解析文本"
+                    imageVersion={imageVersion}
+                  />
                   <Typography.Text strong>解析图片</Typography.Text>
                   <div style={{ marginTop: 8 }}>
-                    <PathPreviewList paths={selectedRow.question.analysis_image_paths} />
+                    <PathPreviewList paths={selectedRow.question.analysis_image_paths} imageVersion={imageVersion} />
                   </div>
                 </Card>
               </Col>

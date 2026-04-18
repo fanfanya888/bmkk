@@ -503,6 +503,38 @@ body {
   object-fit: cover;
 }
 
+.leaderboard-model-meta {
+  display: flex;
+}
+
+.leaderboard-rate-cell {
+  min-width: 0;
+  width: 100%;
+}
+
+.leaderboard-rate-cell-inline {
+  white-space: nowrap;
+}
+
+.leaderboard-rate-cell .ant-progress {
+  margin-top: 4px;
+}
+
+.leaderboard-definition-list {
+  display: flex;
+}
+
+.leaderboard-switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #f7f9fd;
+  border: 1px solid #dde6f4;
+}
+
 .route-loading-card .ant-card-body {
   min-height: 240px;
   display: flex;

@@ -4,8 +4,16 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.db.session import db_session_dependency
-from app.schemas.overview import EvaluationStatsResponse, QuestionStatsResponse
-from app.services.overview_service import get_evaluation_stats, get_question_stats
+from app.schemas.overview import (
+    EvaluationLeaderboardResponse,
+    EvaluationStatsResponse,
+    QuestionStatsResponse,
+)
+from app.services.overview_service import (
+    get_evaluation_leaderboard,
+    get_evaluation_stats,
+    get_question_stats,
+)
 
 
 router = APIRouter(prefix="/overview", tags=["overview"])
@@ -21,3 +29,10 @@ def overview_evaluations(
     session: Session = Depends(db_session_dependency),
 ) -> EvaluationStatsResponse:
     return get_evaluation_stats(session)
+
+
+@router.get("/evaluation-leaderboard", response_model=EvaluationLeaderboardResponse)
+def overview_evaluation_leaderboard(
+    session: Session = Depends(db_session_dependency),
+) -> EvaluationLeaderboardResponse:
+    return get_evaluation_leaderboard(session)

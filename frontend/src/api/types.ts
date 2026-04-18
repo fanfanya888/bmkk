@@ -22,6 +22,31 @@ export interface EvaluationStatsResponse {
   attempt_3_completed: number;
 }
 
+export interface EvaluationLeaderboardRowResponse {
+  model_id: number;
+  model_name: string;
+  api_style: APIStyle;
+  api_model: string;
+  release_date: string | null;
+  is_active: boolean;
+  sort_order: number;
+  sample_count: number;
+  attempt_1_run_count: number;
+  attempt_1_correct_count: number;
+  attempt_1_error_count: number;
+  attempt_2_run_count: number;
+  attempt_2_incremental_correct_count: number;
+  attempt_2_cumulative_correct_count: number;
+  attempt_3_run_count: number;
+  attempt_3_incremental_correct_count: number;
+  attempt_3_cumulative_correct_count: number;
+  latest_finished_at: string | null;
+}
+
+export interface EvaluationLeaderboardResponse {
+  items: EvaluationLeaderboardRowResponse[];
+}
+
 export interface EvalModelRead {
   model_id: number;
   model_name: string;
